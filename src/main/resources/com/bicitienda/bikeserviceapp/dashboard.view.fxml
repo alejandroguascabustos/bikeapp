@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.bicitienda.bikeserviceapp.controller.DashboardController"
+            prefWidth="900" prefHeight="600">
+
+    <top>
+        <MenuBar>
+            <Menu text="Menú">
+                <MenuItem text="Registrar Servicio" onAction="#abrirServicios"/>
+                <MenuItem text="Historial de Servicios" onAction="#abrirHistorial"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Cerrar Sesión" onAction="#cerrarSesion"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <StackPane fx:id="contenidoCentro" alignment="CENTER">
+            <Label text="Bienvenido al Sistema de Bicitienda"
+                   style="-fx-font-size: 22px; -fx-text-fill: #333333;"/>
+        </StackPane>
+    </center>
+
+</BorderPane>

@@ -9,8 +9,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/bicitienda/bikeserviceapp/main-view.fxml"));        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("BikeService - Inicio de Sesión");
         stage.setScene(scene);
         stage.show();
@@ -19,4 +18,6 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+
 }

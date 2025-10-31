@@ -13,4 +13,9 @@ public class ConexionDB {
     public static Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+
+    // Método alias usado por algunos controladores: mantiene compatibilidad con código existente
+    public static Connection getConnection() throws SQLException {
+        return conectar();
+    }
 }

@@ -5,59 +5,73 @@ import com.bicitienda.bikeserviceapp.model.Servicio;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import java.sql.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class HistorialController {
 
-    @FXML private TableView<Servicio> tablaServicios;
-    @FXML private TableColumn<Servicio, String> colCliente;
-    @FXML private TableColumn<Servicio, String> colTipo;
-    @FXML private TableColumn<Servicio, String> colFecha;
-    @FXML private TableColumn<Servicio, Double> colCosto;
+    @FXML
+    private TableView<Servicio> tablaServicios;
+
+    @FXML
+    private TableColumn<Servicio, Integer> colId;
+
+    @FXML
+    private TableColumn<Servicio, String> colCliente;
+
+    @FXML
+    private TableColumn<Servicio, String> colTipo;
+
+    @FXML
+    private TableColumn<Servicio, Double> colCosto;
+
+    @FXML
+    private TableColumn<Servicio, String> colDescripcion;
+
+    @FXML
+    private TableColumn<Servicio, String> colFecha;
 
     private ObservableList<Servicio> listaServicios = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        colCliente.setCellValueFactory(data -> data.getValue().clienteProperty());
-        colTipo.setCellValueFactory(data -> data.getValue().tipoProperty());
-        colFecha.setCellValueFactory(data -> data.getValue().fechaProperty());
-        colCosto.setCellValueFactory(data -> data.getValue().costoProperty().asObject());
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
+        colTipo.setCellValueFactory(new PropertyValueFactory<>("tipoServicio"));
+        colCosto.setCellValueFactory(new PropertyValueFactory<>("costo"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaRegistro"));
 
-        cargarServicios();
+        cargarDatos();
     }
 
-    @FXML
-    private void onActualizar() {
-        cargarServicios();
-    }
-
-    @FXML
-    private void onVolver() {
-        // Aquí podrías volver al menú principal o cerrar la ventana
-        tablaServicios.getScene().getWindow().hide();
-    }
-
-    private void cargarServicios() {
+    private void cargarDatos() {
         listaServicios.clear();
 
         try (Connection conn = ConexionDB.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT cliente, tipo_servicio, fecha, costo FROM servicios")) {
+             ResultSet rs = stmt.executeQuery("SELECT * FROM servicios ORDER BY fecha_registro DESC")) {
 
             while (rs.next()) {
-                listaServicios.add(new Servicio(
+                Servicio servicio = new Servicio(
+                        rs.getInt("id"),
                         rs.getString("cliente"),
                         rs.getString("tipo_servicio"),
-                        rs.getString("fecha"),
-                        rs.getDouble("costo")
-                ));
+                        rs.getDouble("costo"),
+                        rs.getString("descripcion"),
+                        rs.getTimestamp("fecha_registro")
+                );
+                listaServicios.add(servicio);
             }
 
             tablaServicios.setItems(listaServicios);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
